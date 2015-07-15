@@ -219,7 +219,7 @@ function init() {
   imageMesh.position.z = -0.5;
 
   var titleTexture = 'media/hypernomTitle_desktop.png';
-  if (controls.phoneVR.orientationIsAvailable) {
+  if (controls.phoneVR.orientationIsAvailable()) {
     titleTexture = 'media/hypernomTitle_phone.png';
   }
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
