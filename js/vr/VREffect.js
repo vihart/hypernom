@@ -138,7 +138,7 @@ THREE.VREffect = function ( renderer, done ) {
 		var rendererWidth = renderer.domElement.width / renderer.devicePixelRatio;
 		var rendererHeight = renderer.domElement.height / renderer.devicePixelRatio;
 
-		renderer.enableScissorTest(false);
+		renderer.enableScissorTest(true);
 		renderer.clear();
 
 		if ( camera.parent === undefined ) {

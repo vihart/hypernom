@@ -219,8 +219,8 @@ function init() {
   imageMesh.position.z = -0.5;
 
   var titleTexture = 'media/hypernomTitle_desktop.png';
-  if (controls.phoneVR.deviceAlpha !== null) {
-    titleTexture = 'media/hypernomTitle_phone.png'
+  if (controls.phoneVR.orientationIsAvailable) {
+    titleTexture = 'media/hypernomTitle_phone.png';
   }
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, map: THREE.ImageUtils.loadTexture(titleTexture), side: THREE.DoubleSide} ));
