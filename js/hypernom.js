@@ -218,8 +218,12 @@ function init() {
     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide} ));
   imageMesh.position.z = -0.5;
 
+  var titleTexture = 'media/hypernomTitle_desktop.png';
+  if (controls.phoneVR.deviceAlpha !== null) {
+    titleTexture = 'media/hypernomTitle_phone.png'
+  }
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
-    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, map: THREE.ImageUtils.loadTexture('media/hypernomTitle.png'), side: THREE.DoubleSide} ));
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, map: THREE.ImageUtils.loadTexture(titleTexture), side: THREE.DoubleSide} ));
   introMesh.position.z = -0.5;
 
   scoreTexture = new THREEx.DynamicTexture(512,256).clear().drawText("", undefined, 64, "#ffffff", "normal 100px Helvetica");
@@ -396,6 +400,10 @@ function resetGame() {
   scene.add(camera);
 }
 
+function switchRenderMode() {
+  effect.stereoMode = !effect.stereoMode;
+}
+
 //Listen for click event to enter full-screen VR mode
 document.body.addEventListener( 'click', function() {
   effect.setFullScreen( true );
@@ -430,6 +438,8 @@ function onkey(event) {
     resetGame();
   } else if (event.keyCode === 72) { // h
     isShowScore = !isShowScore;
+  } else if (event.keyCode === 9) { // tab
+    switchRenderMode();
   }
 }
 window.addEventListener("keydown", onkey, true);

@@ -28,12 +28,12 @@ THREE.VREffect = function ( renderer, done ) {
 	var cameraRight = new THREE.PerspectiveCamera();
 
 	this._renderer = renderer;
+	this.stereoMode = false;
 
 	this._init = function() {
 		var self = this;
 
 		// default some stuff for mobile VR
-		self.phoneVR = new PhoneVR();
 		self.leftEyeTranslation = { x: -0.03200000151991844, y: -0, z: -0, w: 0 };
 		self.rightEyeTranslation = { x: 0.03200000151991844, y: -0, z: -0, w: 0 };
 		self.leftEyeFOV = { upDegrees: 53.04646464878503, rightDegrees: 47.52769258067174, downDegrees: 53.04646464878503, leftDegrees: 46.63209579904155 };
@@ -89,17 +89,16 @@ THREE.VREffect = function ( renderer, done ) {
 			return;
 		}
 
-		if (this.phoneVR.deviceAlpha !== null) { //default to stereo render for devices with orientation sensor, like mobile
+		if (this.stereoMode) {
 			this.renderStereo.apply( this, arguments );
 			return;
 		}
 
-		// Regular render mode if not HMD
-		renderer.render.apply( this._renderer, arguments );
+		// Mono render mode
+		this.renderMono.apply( this, arguments );
 	};
 
 	this.renderStereo = function( scene, camera, renderTarget, forceClear ) {
-
 		var leftEyeTranslation = this.leftEyeTranslation;
 		var rightEyeTranslation = this.rightEyeTranslation;
 		var renderer = this._renderer;
@@ -132,7 +131,24 @@ THREE.VREffect = function ( renderer, done ) {
 		renderer.setViewport( eyeDivisionLine, 0, eyeDivisionLine, rendererHeight );
 		renderer.setScissor( eyeDivisionLine, 0, eyeDivisionLine, rendererHeight );
 		renderer.render( scene, cameraRight );
+	};
 
+	this.renderMono = function( scene, camera, renderTarget, forceClear ) {
+		var renderer = this._renderer;
+		var rendererWidth = renderer.domElement.width / renderer.devicePixelRatio;
+		var rendererHeight = renderer.domElement.height / renderer.devicePixelRatio;
+
+		renderer.enableScissorTest(false);
+		renderer.clear();
+
+		if ( camera.parent === undefined ) {
+			camera.updateMatrixWorld();
+		}
+
+		// render left eye
+		renderer.setViewport( 0, 0, rendererWidth, rendererHeight );
+		renderer.setScissor( 0, 0, rendererWidth, rendererHeight );
+		renderer.render( scene, camera );
 	};
 
 	this.setSize = function( width, height ) {
