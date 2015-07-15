@@ -12,7 +12,7 @@ var noms = [
 var winNoise = document.querySelector('#win');
 var gamePoints = 0;
 var muteSound = false;
-var isShowScore = true;
+var isShowScore = false;
 var level = 3;
 var aPressed = false, backPressed = false;
 
@@ -80,7 +80,8 @@ function onkey(event) {
   if (event.keyCode == 90) { // z
     controls.zeroSensor();
   }
-};
+}
+
 window.addEventListener("keydown", onkey, true);
 
 document.body.addEventListener('dblclick', function () {
@@ -88,7 +89,7 @@ document.body.addEventListener('dblclick', function () {
 });
 
 THREE.Matrix4.prototype.add = function (m) {   //addition of matrices needs to be implemented??
-  this.set.apply(this, [].map.call(this.elements, function (c, i) { return c + m.elements[i] }));
+  this.set.apply(this, [].map.call(this.elements, function (c, i) { return c + m.elements[i]; }));
 };
 
 function loadStuff() {
@@ -166,13 +167,11 @@ function init() {
   materialBase = new THREE.ShaderMaterial({
     // these are the parameters for the shader
     uniforms: {
-      // global time
-      time: {
+      time: { // global time
         type: "f",
         value: 0.0
       },
-      // quaternion that moves cells into 4-space, set once per cell
-      quatPerCell: {
+      quatPerCell: {  // quaternion that moves cells into 4-space, set once per cell
         type: "v4",
         value: new THREE.Vector4( 0, 0, 0, 0 )
       },
@@ -299,7 +298,7 @@ function animate() {
       imageMesh.material.map = THREE.ImageUtils.loadTexture(polychora[(level+1)%6].picture);
       camera.add(imageMesh);
       camera.remove(scoreMesh);
-      for(var i; i < numCells; i++) {
+      for(i; i < numCells; i++) {
         objectArray[i].visible = true;
       }
     }
@@ -351,19 +350,19 @@ function startLevel(){
 
         loadStuff();
 
-        for (var i = 0; i < numCells; i++) {
-          matArray[i].uniforms.quatPerCell.value = quatPerCellArray[i];
-          matArray[i].uniforms.time.value = 0.00025 * (Date.now() - timing.start);
-          matArray[i].uniforms.travelDir.value = travelDir;
-          matArray[i].uniforms.colourDir.value = colourDir;
-          matArray[i].uniforms.HopfColorMatrix.value = HopfColorMatrix;
-          matArray[i].uniforms.moveQuat.value = moveQuat;
+        for (var j = 0; j < numCells; j++) {
+          matArray[j].uniforms.quatPerCell.value = quatPerCellArray[j];
+          matArray[j].uniforms.time.value = 0.00025 * (Date.now() - timing.start);
+          matArray[j].uniforms.travelDir.value = travelDir;
+          matArray[j].uniforms.colourDir.value = colourDir;
+          matArray[j].uniforms.HopfColorMatrix.value = HopfColorMatrix;
+          matArray[j].uniforms.moveQuat.value = moveQuat;
           if (typeof polychoron.rotMatrixArray === 'undefined') {
-            matArray[i].uniforms.rotMatrix.value = new THREE.Matrix3();
+            matArray[j].uniforms.rotMatrix.value = new THREE.Matrix3();
           } else {
-            matArray[i].uniforms.rotMatrix.value = polychoron.rotMatrixArray[i];
+            matArray[j].uniforms.rotMatrix.value = polychoron.rotMatrixArray[j];
           }
-          matArray[i].uniforms.modelScale.value = modelScale;
+          matArray[j].uniforms.modelScale.value = modelScale;
         }
       }
     }
@@ -405,6 +404,7 @@ document.body.addEventListener( 'click', function() {
 //Listen for keyboard events
 function onkey(event) {
   event.preventDefault();
+  var i;
 
   if (event.keyCode === 90) { // z
     controls.zeroSensor(); //zero rotation
@@ -412,13 +412,13 @@ function onkey(event) {
     effect.setFullScreen(true); //fullscreen
   } else if (event.keyCode === 80) {//p
     if (muteSound === true){
-      for (var i = 0; i < noms.length; i++){
+      for (i = 0; i < noms.length; i++){
         noms[i].volume = 1;
       }
       muteSound = false;
       winNoise.volume = 1;
     } else {
-      for (var i = 0; i < noms.length; i++) {
+      for (i = 0; i < noms.length; i++) {
         noms[i].volume = 0;
       }
       muteSound = true;
