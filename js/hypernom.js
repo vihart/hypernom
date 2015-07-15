@@ -218,13 +218,12 @@ function init() {
     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide} ));
   imageMesh.position.z = -0.5;
 
-  var titleTexture = 'media/hypernomTitle_desktop.png';
-  if (controls.phoneVR.orientationIsAvailable()) {
-    titleTexture = 'media/hypernomTitle_phone.png';
-  }
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
-    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, map: THREE.ImageUtils.loadTexture(titleTexture), side: THREE.DoubleSide} ));
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/hypernomTitle_desktop.png')} ));
+  var titleTexture = 'media/hypernomTitle_desktop.png';
   introMesh.position.z = -0.5;
+  camera.add(introMesh);
 
   scoreTexture = new THREEx.DynamicTexture(512,256).clear().drawText("", undefined, 64, "#ffffff", "normal 100px Helvetica");
   scoreMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.2, 0.1),
@@ -239,7 +238,6 @@ function init() {
     scoreMesh.position.y = -0.1;
   }
 
-  camera.add(introMesh);
   scene.add(camera);
 
   window.addEventListener('resize', onWindowResize, false);
@@ -247,8 +245,16 @@ function init() {
   effect.render(scene, camera);
 }
 
+var noOrientationYet = true;
 function animate() {
   var i, j;
+
+  if (noOrientationYet && controls.phoneVR.orientationIsAvailable()) {
+    noOrientationYet = false;
+    camera.remove(introMesh);
+    introMesh.material.map = THREE.ImageUtils.loadTexture('media/hypernomTitle_phone.png');
+    camera.add(introMesh);
+  }
 
   if (level >= 0) {
     var currTime = Date.now();
