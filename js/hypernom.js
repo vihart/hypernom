@@ -542,7 +542,7 @@ var oldSceneChildren = [];
 var oldCameraChildren = [];
 var oldStereoState;
 function doClickStuff(event) {
-  // effect.setFullScreen(true);
+  effect.setFullScreen(true);
   if (!isPausedGame) {
     isPausedGame = true;
     oldStereoState = effect.stereoMode;
