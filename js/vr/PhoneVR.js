@@ -9,6 +9,8 @@ function PhoneVR() {
     this.deviceGamma = null;
     this.deviceBeta = null;
 
+    this.lastQuaternion = null;
+
     window.addEventListener('deviceorientation', function(orientation) {
         this.deviceAlpha = orientation.alpha;
         this.deviceGamma = orientation.gamma;
@@ -42,6 +44,19 @@ PhoneVR.prototype.rotationQuat = function() {
     var z = cX * cY * sZ + sX * sY * cZ;
 
     var deviceQuaternion = quat.fromValues(x, y, z, w);
+
+    // Implement lift from SO(3) to S^3
+
+    if(lastQuaternion !== null){
+        var difference;
+        var deviceQuaternionInverse;
+        quat.invert(deviceQuaternionInverse, deviceQuaternion); 
+        quat.multiply(difference, lastQuaternion, deviceQuaternionInverse));
+        if(difference[3] < 0.0){
+            quat.scale(deviceQuaternion, deviceQuaternion, -1);
+        }
+    }
+    lastQuaternion = deviceQuaternion;
 
     // Correct for the screen orientation.
     var screenOrientation = (this.getScreenOrientation() * degtorad)/2;
