@@ -51,7 +51,7 @@ PhoneVR.prototype.rotationQuat = function() {
         var difference;
         var deviceQuaternionInverse;
         quat.invert(deviceQuaternionInverse, deviceQuaternion); 
-        quat.multiply(difference, lastQuaternion, deviceQuaternionInverse));
+        quat.multiply(difference, lastQuaternion, deviceQuaternionInverse);
         if(difference[3] < 0.0){
             quat.scale(deviceQuaternion, deviceQuaternion, -1);
         }
