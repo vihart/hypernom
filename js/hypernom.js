@@ -1,6 +1,7 @@
 var camera, scene, overlayScene, renderer, mesh, effect, controls,
   levelTexture, levelMesh, scoreTexture, scoreMesh, introMesh, imageMesh,
-  polychoron, numCells, matArray;
+  _5cellButton, _8cellButton, _16cellButton, _24cellButton, _120cellButton, _600cellButton, _stereoButton, _pauseButton,
+  polychoron, numCells, matArray, projector;
 var objectArray = [];
 var noms = [
   document.querySelector('#nom1'),
@@ -221,7 +222,6 @@ function init() {
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
       map: THREE.ImageUtils.loadTexture('media/hypernomTitle_desktop.png')} ));
-  var titleTexture = 'media/hypernomTitle_desktop.png';
   introMesh.position.z = -0.5;
   camera.add(introMesh);
 
@@ -243,6 +243,90 @@ function init() {
   window.addEventListener('resize', onWindowResize, false);
 
   effect.render(scene, camera);
+
+  initButtons();
+  // initialize object to perform world/screen calculations
+	projector = new THREE.Projector();
+}
+
+function initButtons() {
+  _5cellButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/5cell.png')} ));
+  _5cellButton.position.z = -0.5;
+  _5cellButton.position.x = -0.11;
+  _5cellButton.position.y = 0.15;
+
+  _8cellButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/8cell.png')} ));
+  _8cellButton.position.z = -0.5;
+  _8cellButton.position.x = 0.11;
+  _8cellButton.position.y = 0.15;
+
+  _16cellButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/16cell.png')} ));
+  _16cellButton.position.z = -0.5;
+  _16cellButton.position.x = 0.33;
+  _16cellButton.position.y = 0.15;
+
+  _24cellButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/24cell.png')} ));
+  _24cellButton.position.z = -0.5;
+  _24cellButton.position.x = -0.11;
+  _24cellButton.position.y = -0.15;
+
+  _120cellButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/120cell.png')} ));
+  _120cellButton.position.z = -0.5;
+  _120cellButton.position.x = 0.11;
+  _120cellButton.position.y = -0.15;
+
+  _600cellButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/600cell.png')} ));
+  _600cellButton.position.z = -0.5;
+  _600cellButton.position.x = 0.33;
+  _600cellButton.position.y = -0.15;
+
+  _stereoButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/monoStereo.png')} ));
+  _stereoButton.position.z = -0.5;
+  _stereoButton.position.x = -0.33;
+  _stereoButton.position.y = -0.15;
+
+  _pauseButton = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.1, 0.1),
+    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
+      map: THREE.ImageUtils.loadTexture('media/unpause.png')} ));
+  _pauseButton.position.z = -0.5;
+  _pauseButton.position.x = -0.33;
+  _pauseButton.position.y = 0.15;
+}
+
+function showButtons() {
+  camera.add(_5cellButton);
+  camera.add(_8cellButton);
+  camera.add(_16cellButton);
+  camera.add(_24cellButton);
+  camera.add(_120cellButton);
+  camera.add(_600cellButton);
+  camera.add(_stereoButton);
+  camera.add(_pauseButton);
+}
+
+function hideButtons() { //unpause
+  camera.remove(_5cellButton);
+  camera.remove(_8cellButton);
+  camera.remove(_16cellButton);
+  camera.remove(_24cellButton);
+  camera.remove(_120cellButton);
+  camera.remove(_600cellButton);
+  camera.remove(_stereoButton);
+  camera.remove(_pauseButton);
 }
 
 var noOrientationYet = true;
@@ -333,7 +417,8 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-function startLevel(){
+function startLevel() {
+  hideButtons();
   var notFound = true;
   for (var i=0; i < camera.children.length; i++) {
     if (camera.children[i] === imageMesh) {
@@ -410,11 +495,6 @@ function switchRenderMode() {
   effect.stereoMode = !effect.stereoMode;
 }
 
-//Listen for click event to enter full-screen VR mode
-document.body.addEventListener( 'click', function() {
-  effect.setFullScreen( true );
-});
-
 //Listen for keyboard events
 function onkey(event) {
   event.preventDefault();
@@ -439,9 +519,13 @@ function onkey(event) {
       winNoise.volume = 0;
     }
   } else if (event.keyCode === 32) { // space
-    startLevel();
+    if (!isPausedGame) {
+      startLevel();
+    }
   } else if (event.keyCode === 82 ) { // r
-    resetGame();
+    if (!isPausedGame) {
+      resetGame();
+    }
   } else if (event.keyCode === 72) { // h
     isShowScore = !isShowScore;
   } else if (event.keyCode === 9) { // tab
@@ -451,7 +535,115 @@ function onkey(event) {
 window.addEventListener("keydown", onkey, true);
 
 //listen for click
-document.body.addEventListener( 'click', startLevel);
+document.body.addEventListener( 'click', doClickStuff);
+
+var isPausedGame = false;
+var oldSceneChildren = [];
+var oldCameraChildren = [];
+var oldStereoState;
+function doClickStuff(event) {
+  // effect.setFullScreen(true);
+  if (!isPausedGame) {
+    isPausedGame = true;
+    oldStereoState = effect.stereoMode;
+    effect.stereoMode = false;
+    oldSceneChildren = [];
+    oldCameraChildren = [];
+
+    while (scene.children.length > 1) {
+      oldSceneChildren.push(scene.children[scene.children.length - 1]);
+      scene.remove(scene.children[scene.children.length - 1]);
+    }
+
+    while (camera.children.length > 0) {
+      oldCameraChildren.push(camera.children[camera.children.length-1]);
+      camera.remove(camera.children[camera.children.length-1]);
+    }
+
+    showButtons();
+  } else {
+
+    var button = getClickedButton(event);
+
+    if (button === _pauseButton) {
+      isPausedGame = false;
+      unPause();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _5cellButton) {
+      isPausedGame = false;
+      level = -1;
+      startLevel();
+      startLevel();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _8cellButton) {
+      isPausedGame = false;
+      level = 0;
+      startLevel();
+      startLevel();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _16cellButton) {
+      isPausedGame = false;
+      level = 1;
+      startLevel();
+      startLevel();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _24cellButton) {
+      isPausedGame = false;
+      level = 2;
+      startLevel();
+      startLevel();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _120cellButton) {
+      isPausedGame = false;
+      level = 3;
+      startLevel();
+      startLevel();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _600cellButton) {
+      isPausedGame = false;
+      level = 4;
+      startLevel();
+      startLevel();
+      effect.stereoMode = oldStereoState;
+    } else if (button === _stereoButton) {
+      isPausedGame = false;
+      unPause();
+      effect.stereoMode = !oldStereoState;
+    }
+  }
+}
+
+function getClickedButton() {
+  var mouse = {}; //figure out what was clicked
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // create a Ray with origin at the mouse position and direction into the scene (camera direction)
+  var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+  projector.unprojectVector(vector, camera);
+  var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+  // create an array containing all objects in the scene with which the ray intersects
+  var intersects = ray.intersectObjects(camera.children);
+
+  if ( intersects.length > 0 ) {
+    console.log(intersects[0].object);
+    return intersects[0].object;
+  }
+}
+
+function unPause() {
+  hideButtons();
+  while (oldSceneChildren.length > 0) {
+    scene.add(oldSceneChildren[oldSceneChildren.length-1]);
+    oldSceneChildren.pop();
+  }
+
+  while (oldCameraChildren.length > 0) {
+    camera.add(oldCameraChildren[oldCameraChildren.length-1]);
+    oldCameraChildren.pop();
+  }
+}
 
 //hold down keys to do rotations and stuff
 document.addEventListener('keydown', function(event) { key(event, 1); }, false);

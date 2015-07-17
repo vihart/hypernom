@@ -23,7 +23,6 @@
  *
  */
 THREE.VREffect = function ( renderer, done ) {
-
 	var cameraLeft = new THREE.PerspectiveCamera();
 	var cameraRight = new THREE.PerspectiveCamera();
 
