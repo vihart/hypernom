@@ -1,5 +1,5 @@
 var camera, scene, overlayScene, renderer, mesh, effect, controls,
-  levelTexture, levelMesh, scoreTexture, scoreMesh, introMesh, imageMesh,
+  levelTexture, levelMesh, scoreTexture, scoreMesh, introMesh,
   _5cellButton, _8cellButton, _16cellButton, _24cellButton, _120cellButton, _600cellButton, _stereoButton, _pauseButton,
   polychoron, numCells, matArray, projector;
 var objectArray = [];
@@ -215,10 +215,6 @@ function init() {
                     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, map: levelTexture.texture, side: THREE.DoubleSide} ));
   levelMesh.position.z = -0.29;
 
-  imageMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
-    new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide} ));
-  imageMesh.position.z = -0.5;
-
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
       map: THREE.ImageUtils.loadTexture('media/hypernomTitle_desktop.png')} ));
@@ -389,8 +385,6 @@ function animate() {
       levelTexture.clear()
         .drawText("Last Level Score: "  + Math.round((timing.end[level] - timing.start[level])/100)/10, undefined, 200, "#E59400", "normal 30px Helvetica");
       camera.add(levelMesh);
-      imageMesh.material.map = THREE.ImageUtils.loadTexture(polychora[(level+1)%6].picture);
-      camera.add(imageMesh);
       camera.remove(scoreMesh);
       for(i; i < numCells; i++) {
         objectArray[i].visible = true;
@@ -419,59 +413,47 @@ function animate() {
 
 function startLevel() {
   hideButtons();
-  var notFound = true;
-  for (var i=0; i < camera.children.length; i++) {
-    if (camera.children[i] === imageMesh) {
-      notFound = false;
-      camera.remove(imageMesh);
-      camera.remove(levelMesh);
 
-      level = (level+1)%6;
-      if (scene) {
-        timing.start[level] = Date.now();
-        camera.add(scoreMesh);
-        while (scene.children.length > 1) {
-          scene.remove(scene.children[scene.children.length - 1]);
-        }
-        polychoron = polychora[level];
-        quatPerCellArray = polychoron.quatPerCellArray;
-        numCells = quatPerCellArray.length;
-        matArray = new Array(numCells);
-        modelFileName = polychoron.modelFileName;
-        nomDistance = polychoron.nomDistance;
-        objectArray = [];
-
-        // camera.position.z = 1.5;
-
-        loadStuff();
-
-        for (var j = 0; j < numCells; j++) {
-          matArray[j].uniforms.quatPerCell.value = quatPerCellArray[j];
-          matArray[j].uniforms.time.value = 0.00025 * (Date.now() - timing.start);
-          matArray[j].uniforms.travelDir.value = travelDir;
-          matArray[j].uniforms.colourDir.value = colourDir;
-          matArray[j].uniforms.HopfColorMatrix.value = HopfColorMatrix;
-          matArray[j].uniforms.moveQuat.value = moveQuat;
-          if (typeof polychoron.rotMatrixArray === 'undefined') {
-            matArray[j].uniforms.rotMatrix.value = new THREE.Matrix3();
-          } else {
-            matArray[j].uniforms.rotMatrix.value = polychoron.rotMatrixArray[j];
-          }
-          matArray[j].uniforms.modelScale.value = modelScale;
-        }
-      }
-    }
-  }
-
-  if (notFound) {
+  if (scene) {
     gamePoints = 0;
     while (scene.children.length > 1) {
       scene.remove(scene.children[scene.children.length - 1]);
     }
-    imageMesh.material.map = THREE.ImageUtils.loadTexture(polychora[(level+1)%6].picture);
     camera.remove(introMesh);
-    camera.remove(scoreMesh);
-    camera.add(imageMesh);
+    camera.remove(levelMesh);
+
+    level = (level+1)%6;
+
+    timing.start[level] = Date.now();
+    while (scene.children.length > 1) {
+      scene.remove(scene.children[scene.children.length - 1]);
+    }
+    polychoron = polychora[level];
+    quatPerCellArray = polychoron.quatPerCellArray;
+    numCells = quatPerCellArray.length;
+    matArray = new Array(numCells);
+    modelFileName = polychoron.modelFileName;
+    nomDistance = polychoron.nomDistance;
+    objectArray = [];
+
+    // camera.position.z = 1.5;
+
+    loadStuff();
+
+    for (var j = 0; j < numCells; j++) {
+      matArray[j].uniforms.quatPerCell.value = quatPerCellArray[j];
+      matArray[j].uniforms.time.value = 0.00025 * (Date.now() - timing.start);
+      matArray[j].uniforms.travelDir.value = travelDir;
+      matArray[j].uniforms.colourDir.value = colourDir;
+      matArray[j].uniforms.HopfColorMatrix.value = HopfColorMatrix;
+      matArray[j].uniforms.moveQuat.value = moveQuat;
+      if (typeof polychoron.rotMatrixArray === 'undefined') {
+        matArray[j].uniforms.rotMatrix.value = new THREE.Matrix3();
+      } else {
+        matArray[j].uniforms.rotMatrix.value = polychoron.rotMatrixArray[j];
+      }
+      matArray[j].uniforms.modelScale.value = modelScale;
+    }
   }
 }
 
@@ -573,36 +555,30 @@ function doClickStuff(event) {
       isPausedGame = false;
       level = -1;
       startLevel();
-      startLevel();
       effect.stereoMode = oldStereoState;
     } else if (button === _8cellButton) {
       isPausedGame = false;
       level = 0;
-      startLevel();
       startLevel();
       effect.stereoMode = oldStereoState;
     } else if (button === _16cellButton) {
       isPausedGame = false;
       level = 1;
       startLevel();
-      startLevel();
       effect.stereoMode = oldStereoState;
     } else if (button === _24cellButton) {
       isPausedGame = false;
       level = 2;
-      startLevel();
       startLevel();
       effect.stereoMode = oldStereoState;
     } else if (button === _120cellButton) {
       isPausedGame = false;
       level = 3;
       startLevel();
-      startLevel();
       effect.stereoMode = oldStereoState;
     } else if (button === _600cellButton) {
       isPausedGame = false;
       level = 4;
-      startLevel();
       startLevel();
       effect.stereoMode = oldStereoState;
     } else if (button === _stereoButton) {
@@ -627,7 +603,6 @@ function getClickedButton() {
   var intersects = ray.intersectObjects(camera.children);
 
   if ( intersects.length > 0 ) {
-    console.log(intersects[0].object);
     return intersects[0].object;
   }
 }
