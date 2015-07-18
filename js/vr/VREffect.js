@@ -135,9 +135,7 @@ THREE.VREffect = function ( renderer, done ) {
 
 		renderer.clear();
 
-		console.log(camera.quaternion);
 		camera.matrixWorld.decompose(camera.position, camera.quaternion, camera.scale); // this is bs. shouldn't do anything, but if you don't have it, it judders
-		console.log(camera.quaternion);
 
 		renderer.render.apply( this._renderer, arguments );
 	};
