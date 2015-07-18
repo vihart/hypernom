@@ -18,11 +18,11 @@ Hypernom in the Bridges Math Art 2015 exhibit: http://gallery.bridgesmathart.org
 
 --------------------
 
-By Henry Segerman, Vi Hart, and Andrea Hawksley, using Marc ten Bosch's 4D graphics shader, Mozilla's webVR stuff, and threejs.
+By Vi Hart, Andrea Hawksley, and Henry Segerman, using Marc ten Bosch's 4D graphics shader, Mozilla's webVR stuff, and threejs.
 
-- http://www.segerman.org/
 - http://vihart.com
 - https://andreahawksley.com
+- http://www.segerman.org/
 - http://www.marctenbosch.com
 - https://github.com/MozVR/vr-web-examples/tree/master/threejs-vr-boilerplate
 - http://threejs.org
