@@ -63,6 +63,8 @@ THREE.VREffect = function ( renderer, done ) {
 					self.rightEyeTranslation = parametersRight.eyeTranslation;
 					self.leftEyeFOV = parametersLeft.recommendedFieldOfView;
 					self.rightEyeFOV = parametersRight.recommendedFieldOfView;
+
+					this.stereoMode = true;
 					break; // We keep the first we encounter
 				}
 			}
@@ -82,19 +84,12 @@ THREE.VREffect = function ( renderer, done ) {
 		var renderer = this._renderer;
 		var vrHMD = this._vrHMD;
 		renderer.enableScissorTest( false );
-		// VR render mode if HMD is available
-		if ( vrHMD ) {
-			this.renderStereo.apply( this, arguments );
-			return;
-		}
 
 		if (this.stereoMode) {
 			this.renderStereo.apply( this, arguments );
-			return;
+		} else {
+			this.renderMono.apply( this, arguments );
 		}
-
-		// Mono render mode
-		this.renderMono.apply( this, arguments );
 	};
 
 	this.renderStereo = function( scene, camera, renderTarget, forceClear ) {
@@ -136,18 +131,15 @@ THREE.VREffect = function ( renderer, done ) {
 		var renderer = this._renderer;
 		var rendererWidth = renderer.domElement.width / renderer.devicePixelRatio;
 		var rendererHeight = renderer.domElement.height / renderer.devicePixelRatio;
+		renderer.setViewport( 0, 0, rendererWidth, rendererHeight );
 
-		renderer.enableScissorTest(true);
 		renderer.clear();
 
-		if ( camera.parent === undefined ) {
-			camera.updateMatrixWorld();
-		}
+		console.log(camera.quaternion);
+		camera.matrixWorld.decompose(camera.position, camera.quaternion, camera.scale); // this is bs. shouldn't do anything, but if you don't have it, it judders
+		console.log(camera.quaternion);
 
-		// render left eye
-		renderer.setViewport( 0, 0, rendererWidth, rendererHeight );
-		renderer.setScissor( 0, 0, rendererWidth, rendererHeight );
-		renderer.render( scene, camera );
+		renderer.render.apply( this._renderer, arguments );
 	};
 
 	this.setSize = function( width, height ) {
