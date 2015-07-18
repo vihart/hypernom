@@ -5,7 +5,8 @@ Read our related paper here: http://m.archive.bridgesmathart.org/2015/bridges201
 
 ## Useful commands 
 
-- move to next polytope: ```tap/click``` or ```space```
+- go to menu: ```tap``` or ```click```
+- move to next polytope: ```space```
 - quaternion rotation: ```i j k l u o``` or headset rotation in webVR or mobile device rotation
 //- 'normal' rotation: ```w a s d q e``` 
 //- movement: ```arrow keys```
