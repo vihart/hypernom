@@ -8,7 +8,7 @@ Read our related paper here: http://m.archive.bridgesmathart.org/2015/bridges201
 - go to menu: ```tap``` or ```click```
 - fullscreen: ```tap``` or ```click```
 - move to next polytope: ```space```
-- quaternion rotation: ```i j k l u o``` or headset rotation in webVR or mobile device rotation
+- quaternion rotation: ```i j k l u o``` or ```headset rotation in webVR``` or ```mobile device rotation```
 - show/hide scoring: ```h```
 - reset to home screen: ```r```
 - switch between stereo and mono: ```tab```
