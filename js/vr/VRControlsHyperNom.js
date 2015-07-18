@@ -189,11 +189,8 @@ THREE.VRControls = function ( camera, done ) {
 	  quat.multiply(manualRotation, manualRotation, update);
 	  quat.normalize(manualRotation, manualRotation);
 
-
-
 	  var totalRotation = quat.create();
 	  quat.multiply(totalRotation, manualQuat, manualRotation);  //both manual quat and manual rot applied...
-
 
 		if ( camera ) {
 			if ( !vrState ) {

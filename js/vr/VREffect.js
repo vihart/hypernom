@@ -135,7 +135,9 @@ THREE.VREffect = function ( renderer, done ) {
 
 		renderer.clear();
 
-		camera.matrixWorld.decompose(camera.position, camera.quaternion, camera.scale); // this is bs. shouldn't do anything, but if you don't have it, it judders
+		// this is bs. shouldn't do anything, but if you don't have it, it judders
+		// if you do have it, it breaks the wasd and arrow keys functionality
+		camera.matrixWorld.decompose(camera.position, camera.quaternion, camera.scale);
 
 		renderer.render.apply( this._renderer, arguments );
 	};
