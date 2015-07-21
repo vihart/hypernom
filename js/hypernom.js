@@ -531,6 +531,10 @@ var oldStereoState;
 var oldFlatState;
 function doClickStuff(event) {
   effect.setFullScreen(true);
+
+  window.screen.orientation.lock('landscape-primary');
+
+
   if (!isPausedGame) {
     isPausedGame = true;
 
