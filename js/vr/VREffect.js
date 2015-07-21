@@ -23,6 +23,7 @@
  *
  */
 THREE.VREffect = function ( renderer, done ) {
+	var cameraCenter = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.2, 25);
 	var cameraLeft = new THREE.PerspectiveCamera();
 	var cameraRight = new THREE.PerspectiveCamera();
 	var phoneVR = new PhoneVR();
@@ -146,13 +147,13 @@ THREE.VREffect = function ( renderer, done ) {
 			camera.updateMatrixWorld();
 		}
 
-		cameraLeft.projectionMatrix = this.FovToProjection( this.leftEyeFOV, true, camera.near, camera.far );
-
-		camera.matrixWorld.decompose( cameraLeft.position, cameraLeft.quaternion, cameraLeft.scale );
+		cameraCenter.aspect = rendererWidth/rendererHeight;
+		cameraCenter.updateProjectionMatrix();
+		camera.matrixWorld.decompose( cameraCenter.position, cameraCenter.quaternion, cameraCenter.scale );
 
 		renderer.setViewport( 0, 0, rendererWidth, rendererHeight );
 		renderer.setScissor( 0, 0, rendererWidth, rendererHeight );
-		renderer.render( scene, cameraLeft );
+		renderer.render( scene, cameraCenter );
 	};
 
 	this.renderFlat = function( scene, camera, renderTarget, forceClear ) {
