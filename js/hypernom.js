@@ -533,7 +533,9 @@ var oldFlatState;
 function doClickStuff(event) {
   effect.setFullScreen(true);
 
-  window.screen.orientation.lock('landscape-primary');
+  if (typeof window.screen.orientation !== 'undefined' && typeof window.screen.orientation.lock === 'function') {
+    window.screen.orientation.lock('landscape-primary');
+  }
 
 
   if (!isPausedGame) {
