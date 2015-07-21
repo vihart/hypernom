@@ -211,9 +211,9 @@ function init() {
   materialBase.side = THREE.FrontSide;
 
   levelTexture = new THREEx.DynamicTexture(1024,512).clear();
-  levelMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.5, 0.25),
+  levelMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(1, 0.5),
                     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, map: levelTexture.texture, side: THREE.DoubleSide} ));
-  levelMesh.position.z = -0.29;
+  levelMesh.position.z = -0.5;
 
   introMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.3),
     new THREE.MeshBasicMaterial( {color: 0xffffff, transparent: true, opacity: 1, side: THREE.DoubleSide,
@@ -384,7 +384,8 @@ function animate() {
       winNoise.play();
       gamePoints = 0;
       levelTexture.clear()
-        .drawText("Last Level Score: "  + Math.round((timing.end[level] - timing.start[level])/100)/10, undefined, 200, "#E59400", "normal 30px Helvetica");
+        .drawText("Level Score: ", undefined, 200, "#E59400", "normal 100px Helvetica")
+        .drawText(Math.round((timing.end[level] - timing.start[level])/100)/10 + " seconds", undefined, 300, "#E59400", "normal 100px Helvetica");
       camera.add(levelMesh);
       camera.remove(scoreMesh);
       for(i; i < numCells; i++) {
