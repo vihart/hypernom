@@ -25,9 +25,11 @@
 THREE.VREffect = function ( renderer, done ) {
 	var cameraLeft = new THREE.PerspectiveCamera();
 	var cameraRight = new THREE.PerspectiveCamera();
+	var phoneVR = new PhoneVR();
 
 	this._renderer = renderer;
 	this.stereoMode = false;
+	this.flatMode = true;
 
 	this._init = function() {
 		var self = this;
@@ -86,9 +88,9 @@ THREE.VREffect = function ( renderer, done ) {
 		renderer.enableScissorTest( false );
 
 		if (this.stereoMode) {
-			this.renderStereo.apply( this, arguments );
+			this.renderStereo.apply(this, arguments);
 		} else {
-			this.renderMono.apply( this, arguments );
+			this.renderMono.apply(this, arguments);
 		}
 	};
 
@@ -131,13 +133,35 @@ THREE.VREffect = function ( renderer, done ) {
 		var renderer = this._renderer;
 		var rendererWidth = renderer.domElement.width / renderer.devicePixelRatio;
 		var rendererHeight = renderer.domElement.height / renderer.devicePixelRatio;
+
+		if (this.flatMode) {
+			this.renderFlat.apply(this, arguments);
+			return;
+		}
+
+		renderer.enableScissorTest( true );
+		renderer.clear();
+
+		if ( camera.parent === undefined ) {
+			camera.updateMatrixWorld();
+		}
+
+		cameraLeft.projectionMatrix = this.FovToProjection( this.leftEyeFOV, true, camera.near, camera.far );
+
+		camera.matrixWorld.decompose( cameraLeft.position, cameraLeft.quaternion, cameraLeft.scale );
+
+		renderer.setViewport( 0, 0, rendererWidth, rendererHeight );
+		renderer.setScissor( 0, 0, rendererWidth, rendererHeight );
+		renderer.render( scene, cameraLeft );
+	};
+
+	this.renderFlat = function( scene, camera, renderTarget, forceClear ) {
+		var renderer = this._renderer;
+		var rendererWidth = renderer.domElement.width / renderer.devicePixelRatio;
+		var rendererHeight = renderer.domElement.height / renderer.devicePixelRatio;
 		renderer.setViewport( 0, 0, rendererWidth, rendererHeight );
 
 		renderer.clear();
-
-		// this is bs. shouldn't do anything, but if you don't have it, it judders
-		// if you do have it, it breaks the wasd and arrow keys functionality
-		camera.matrixWorld.decompose(camera.position, camera.quaternion, camera.scale);
 
 		renderer.render.apply( this._renderer, arguments );
 	};

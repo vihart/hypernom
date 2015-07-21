@@ -379,6 +379,7 @@ function animate() {
     }
 
     if (gamePoints == numCells) {
+      effect.flatMode = true;
       timing.end[level] = Date.now();
       winNoise.play();
       gamePoints = 0;
@@ -413,6 +414,7 @@ function animate() {
 
 function startLevel() {
   hideButtons();
+  effect.flatMode = false;
 
   if (scene) {
     gamePoints = 0;
@@ -469,6 +471,7 @@ function resetGame() {
   while (camera.children.length > 0) {
     camera.remove(camera.children[camera.children.length-1]);
   }
+  effect.flatMode = true;
   camera.add(introMesh);
   scene.add(camera);
 }
@@ -511,7 +514,9 @@ function onkey(event) {
   } else if (event.keyCode === 72) { // h
     isShowScore = !isShowScore;
   } else if (event.keyCode === 9) { // tab
-    switchRenderMode();
+    if (!isPausedGame) {
+      switchRenderMode();
+    }
   }
 }
 window.addEventListener("keydown", onkey, true);
@@ -523,12 +528,18 @@ var isPausedGame = false;
 var oldSceneChildren = [];
 var oldCameraChildren = [];
 var oldStereoState;
+var oldFlatState;
 function doClickStuff(event) {
   effect.setFullScreen(true);
   if (!isPausedGame) {
     isPausedGame = true;
+
     oldStereoState = effect.stereoMode;
     effect.stereoMode = false;
+
+    oldFlatState = effect.flatMode;
+    effect.flatMode = true;
+
     oldSceneChildren = [];
     oldCameraChildren = [];
 
@@ -551,6 +562,7 @@ function doClickStuff(event) {
       isPausedGame = false;
       unPause();
       effect.stereoMode = oldStereoState;
+      effect.flatMode = oldFlatState;
     } else if (button === _5cellButton) {
       isPausedGame = false;
       level = -1;
@@ -585,6 +597,7 @@ function doClickStuff(event) {
       isPausedGame = false;
       unPause();
       effect.stereoMode = !oldStereoState;
+      effect.flatMode = oldFlatState;
     }
   }
 }
