@@ -13,7 +13,7 @@ Hypernom in the Bridges Math Art 2015 exhibit: http://gallery.bridgesmathart.org
 - move to next polytope: ```space```
 - quaternion rotation: ```i j k l u o``` or ```headset rotation in webVR``` or ```mobile device rotation```
 - 'normal' rotation: ```w a s d q e```
-- translation: ```arrow keys```
+- translation: ```arrow keys```, ```/``` and ```'```
 - show/hide scoring: ```h```
 - reset to home screen: ```r```
 - switch between stereo and mono: ```tab```
