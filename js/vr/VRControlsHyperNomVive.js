@@ -202,7 +202,7 @@ THREE.VRControls = function ( camera, done ) {
 			}
 
 				// Applies head rotation from sensors data.
-		    var deviceQuaternion;
+		    var deviceQuaternion = new THREE.Quaternion();
 		    deviceQuaternion.copy(vrState.hmd.rotation);
 
 
