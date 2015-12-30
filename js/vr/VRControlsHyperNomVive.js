@@ -202,7 +202,8 @@ THREE.VRControls = function ( camera, done ) {
 			}
 
 				// Applies head rotation from sensors data.
-		    var deviceQuaternion = vrState.hmd.rotation.copy();
+		    var deviceQuaternion;
+		    deviceQuaternion.copy(vrState.hmd.rotation);
 
 
 	      if (deviceQuaternion[0] !== 0 ||
@@ -225,7 +226,7 @@ THREE.VRControls = function ( camera, done ) {
 
 		        }
 		    }
-		    this.lastQuaternion = deviceQuaternion.copy();
+		    this.lastQuaternion.copy(deviceQuaternion);
 
 			quat.multiply(totalRotation, deviceQuaternion, totalRotation);
 	      }
