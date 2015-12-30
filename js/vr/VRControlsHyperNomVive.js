@@ -201,34 +201,32 @@ THREE.VRControls = function ( camera, done ) {
 				return;
 			}
 
-			// Applies head rotation from sensors data.
-	    var deviceQuaternion = vrState.hmd.rotation;
-
-    
+				// Applies head rotation from sensors data.
+		    var deviceQuaternion = vrState.hmd.rotation;
 
 
+	      if (deviceQuaternion[0] !== 0 ||
+						deviceQuaternion[1] !== 0 ||
+						deviceQuaternion[2] !== 0 ||
+						deviceQuaternion[3] !== 0) {
 
-      if (deviceQuaternion[0] !== 0 ||
-					deviceQuaternion[1] !== 0 ||
-					deviceQuaternion[2] !== 0 ||
-					deviceQuaternion[3] !== 0) {
+	      	console.log(deviceQuaternion);
+	      	// Implement lift from SO(3) to S^3
+		    if(this.lastQuaternion !== null){
+		        var difference = [];
+		        var deviceQuaternionInverse = [];
+		        quat.invert(deviceQuaternionInverse, deviceQuaternion);
+		        quat.multiply(difference, this.lastQuaternion, deviceQuaternionInverse);
+		        if(difference[3] < 0.0){
+		            quat.scale(deviceQuaternion, deviceQuaternion, -1);
+		        }
+		    }
+		    this.lastQuaternion = deviceQuaternion;
 
-      	// Implement lift from SO(3) to S^3
-	    if(this.lastQuaternion !== null){
-	        var difference = [];
-	        var deviceQuaternionInverse = [];
-	        quat.invert(deviceQuaternionInverse, deviceQuaternion);
-	        quat.multiply(difference, this.lastQuaternion, deviceQuaternionInverse);
-	        if(difference[3] < 0.0){
-	            quat.scale(deviceQuaternion, deviceQuaternion, -1);
-	        }
-	    }
-	    this.lastQuaternion = deviceQuaternion;
+			quat.multiply(totalRotation, deviceQuaternion, totalRotation);
+	      }
 
-		quat.multiply(totalRotation, deviceQuaternion, totalRotation);
-      }
-
-	camera.quaternion.fromArray( totalRotation );
+			camera.quaternion.fromArray( totalRotation );
 	
 		}
 
