@@ -211,15 +211,18 @@ THREE.VRControls = function ( camera, done ) {
 						deviceQuaternion[3] !== 0) {
 
 	      	
+		     console.log(deviceQuaternion);
+		 	console.log(this.lastQuaternion);
 	      	// Implement lift from SO(3) to S^3
 		    if(this.lastQuaternion !== null){
 		        var difference = [];
 		        var deviceQuaternionInverse = [];
 		        quat.invert(deviceQuaternionInverse, deviceQuaternion);
 		        quat.multiply(difference, this.lastQuaternion, deviceQuaternionInverse);
+		        console.log(difference);
 		        if(difference[3] < 0.0){
 		            quat.scale(deviceQuaternion, deviceQuaternion, -1);
-		            console.log(deviceQuaternion);
+
 		        }
 		    }
 		    this.lastQuaternion = deviceQuaternion.copy();
